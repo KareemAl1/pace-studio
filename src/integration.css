@@ -1,0 +1,13 @@
+/* Runtime presentation hooks. The fixed renderer stays outside section stacking contexts. */
+#product-layer{position:fixed;inset:0;width:100vw;height:100svh;z-index:3;pointer-events:none;overflow:hidden}
+#product-layer canvas{display:block;width:100%;height:100%;pointer-events:none}
+html[data-motion="reduce"] #product-layer{display:none}
+#pace-metrics{position:fixed;bottom:12px;left:12px;z-index:90;background:#111e;color:#ddff00;padding:12px;font:11px/1.4 monospace;max-width:320px;pointer-events:none}
+#test-context-loss{position:fixed;bottom:12px;right:12px;z-index:99;padding:12px;font:13px system-ui;background:#ddff00;color:#111;border:2px solid #111}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+html[data-motion="full"] .detail-copy{transition:opacity 180ms ease,visibility 180ms}
+html[data-motion="full"] .detail-copy.is-active{animation:copy-arrive 260ms cubic-bezier(.2,.7,.2,1)}
+html[data-motion="full"] .hero-title .word{animation:word-arrive 600ms cubic-bezier(.2,.7,.2,1) both}
+html[data-motion="full"] .headline-line--blue .word{animation-delay:70ms}
+@keyframes word-arrive{from{transform:translateY(12px) rotate(1deg)}to{transform:none}}
+@keyframes copy-arrive{from{transform:translateY(7px)}to{transform:none}}

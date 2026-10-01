@@ -1,0 +1,282 @@
+{
+  "label": "LIVE BROWSER SAMPLE — native user scrolling; no automated scroll",
+  "url": "/baseline.html?motion=full&profile=1",
+  "stoppedBy": "user",
+  "durationMs": 59091.8,
+  "viewport": {
+    "width": 1280,
+    "height": 800,
+    "devicePixelRatio": 1
+  },
+  "visibility": [
+    {
+      "atMs": 0,
+      "hidden": false
+    }
+  ],
+  "documentHiddenAtStop": false,
+  "events": {
+    "scroll": 14,
+    "trustedScroll": 14,
+    "wheel": 20,
+    "trustedWheel": 20,
+    "scrollKeys": 0
+  },
+  "rendererDrawsDuringSample": 25,
+  "rendererDrawsLifetime": 46,
+  "setupMs": [
+    200.5
+  ],
+  "frameGapsMs": {
+    "count": 58,
+    "median": 1000.1,
+    "p95": 1004.3,
+    "max": 1004.4,
+    "mean": 1001.53
+  },
+  "gapsOver33ms": 58,
+  "gapsOver50ms": 58,
+  "cpuRenderSubmissionMs": {
+    "count": 25,
+    "median": 0.3,
+    "p95": 0.6,
+    "max": 0.7,
+    "mean": 0.37
+  },
+  "scrollEventToRenderEndMs": {
+    "count": 14,
+    "median": 0.6,
+    "p95": 1004.6,
+    "max": 1004.6,
+    "mean": 428.99
+  },
+  "longTasks": {
+    "supported": true,
+    "count": 0,
+    "totalMs": 0,
+    "entries": []
+  },
+  "rendererAtStart": {
+    "draws": 21,
+    "triangles": 56870,
+    "drawCalls": 22,
+    "geometries": 20,
+    "textures": 8,
+    "dpr": 1,
+    "physicalCanvas": [
+      986,
+      672
+    ],
+    "shadowMapEnabled": false,
+    "antialias": true,
+    "gpuVendor": "Google Inc. (NVIDIA)",
+    "gpuRenderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5080 (0x00002C02) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "shoeTextures": [
+      {
+        "width": 128,
+        "height": 128,
+        "anisotropy": 1,
+        "mipmaps": true
+      },
+      {
+        "width": 256,
+        "height": 256,
+        "anisotropy": 4,
+        "mipmaps": true
+      },
+      {
+        "width": 256,
+        "height": 256,
+        "anisotropy": 4,
+        "mipmaps": true
+      },
+      {
+        "width": 256,
+        "height": 256,
+        "anisotropy": 4,
+        "mipmaps": true
+      },
+      {
+        "width": 512,
+        "height": 128,
+        "anisotropy": 4,
+        "mipmaps": true
+      },
+      {
+        "width": 512,
+        "height": 128,
+        "anisotropy": 4,
+        "mipmaps": true
+      }
+    ],
+    "meanCpuRenderMs": 3.74,
+    "maxCpuRenderMs": 67.4
+  },
+  "rendererAtStop": {
+    "draws": 46,
+    "triangles": 56870,
+    "drawCalls": 22,
+    "geometries": 20,
+    "textures": 8,
+    "dpr": 1,
+    "physicalCanvas": [
+      872,
+      497
+    ],
+    "shadowMapEnabled": false,
+    "antialias": true,
+    "gpuVendor": "Google Inc. (NVIDIA)",
+    "gpuRenderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5080 (0x00002C02) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "shoeTextures": [
+      {
+        "width": 128,
+        "height": 128,
+        "anisotropy": 1,
+        "mipmaps": true
+      },
+      {
+        "width": 256,
+        "height": 256,
+        "anisotropy": 4,
+        "mipmaps": true
+      },
+      {
+        "width": 256,
+        "height": 256,
+        "anisotropy": 4,
+        "mipmaps": true
+      },
+      {
+        "width": 256,
+        "height": 256,
+        "anisotropy": 4,
+        "mipmaps": true
+      },
+      {
+        "width": 512,
+        "height": 128,
+        "anisotropy": 4,
+        "mipmaps": true
+      },
+      {
+        "width": 512,
+        "height": 128,
+        "anisotropy": 4,
+        "mipmaps": true
+      }
+    ],
+    "meanCpuRenderMs": 1.91,
+    "maxCpuRenderMs": 67.4
+  },
+  "caveats": [
+    "rAF cadence includes ALL observed gaps. It measures this browser scheduling, not isolated GPU execution.",
+    "The measurement rAF runs only during this explicit sample; it never updates or renders the product.",
+    "CPU render timing and event-to-render-end latency measure submission, not presentation or GPU completion.",
+    "Wheel/scroll/key counts reflect the actual events received. A zero-input sample does not establish scrolling smoothness.",
+    "Small sample: fewer than 120 frame intervals; sustained smoothness is not established.",
+    "Emulated viewport measurements are not physical-phone measurements."
+  ],
+  "rawFrameGapsMs": [
+    1000,
+    1000.1,
+    1000,
+    1004.2,
+    1000,
+    999.9,
+    1000.1,
+    1000,
+    1004.4,
+    1004,
+    1000.1,
+    1000.1,
+    1004,
+    1004.3,
+    1004.1,
+    1000.1,
+    1004.1,
+    1000,
+    1000.1,
+    1000,
+    1004.2,
+    1000,
+    1000,
+    1000.1,
+    1004.1,
+    1000.1,
+    1004.3,
+    1004.1,
+    1004.1,
+    1000.1,
+    1000,
+    1000,
+    1000.1,
+    999.9,
+    1004.2,
+    1000.1,
+    1000,
+    1004.1,
+    1000.2,
+    1004.3,
+    1004.2,
+    1003.9,
+    1000.1,
+    999.9,
+    1000.1,
+    1000.2,
+    1004,
+    1000,
+    1000.1,
+    1000,
+    1004.2,
+    1000,
+    1000,
+    1000.2,
+    1004.1,
+    1004.1,
+    1000,
+    1000.1
+  ],
+  "rawCpuRenderMs": [
+    0.6,
+    0.4,
+    0.2,
+    0.4,
+    0.2,
+    0.5,
+    0.2,
+    0.3,
+    0.3,
+    0.4,
+    0.5,
+    0.7,
+    0.4,
+    0.3,
+    0.2,
+    0.5,
+    0.2,
+    0.3,
+    0.3,
+    0.3,
+    0.2,
+    0.6,
+    0.5,
+    0.3,
+    0.5
+  ],
+  "rawScrollLatencyMs": [
+    0.9,
+    1000.1,
+    0.5,
+    1004.6,
+    0.3,
+    996.3,
+    1000.4,
+    0.4,
+    0.3,
+    0.6,
+    999.9,
+    0.6,
+    1000.4,
+    0.6
+  ]
+}

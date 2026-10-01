@@ -1,0 +1,3 @@
+# Preserve verbatim upstream license text, including its whitespace.
+public/fonts/*-OFL.txt -whitespace
+public/THIRD_PARTY_NOTICES.txt -whitespace
