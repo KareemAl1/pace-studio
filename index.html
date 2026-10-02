@@ -1,61 +1,85 @@
 <!doctype html>
-<html lang="en" data-motion="reduce">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#e9eef1" />
-    <meta name="description" content="PACE 01. An original running-shoe concept, explored through shape, construction and woven texture." />
-    <title>PACE — Run your own way.</title>
-    <link rel="icon" href="/favicon.svg" />
-    <link rel="preload" href="/fonts/BarlowCondensed-Black.ttf" as="font" type="font/ttf" crossorigin />
-  </head>
-  <body>
-    <a class="skip-link" href="#main">Skip to content</a>
-    <header class="site-header">
-      <a class="brand" href="#hero" aria-label="PACE, back to the opening">pace<span aria-hidden="true">↗</span></a>
-      <span class="header-edition">Independent running / Design study 01</span>
-      <nav aria-label="Main navigation"><a class="nav-link" href="#details">Explore the shoe <span aria-hidden="true">↘</span></a></nav>
-    </header>
+<html lang="en" data-motion="reduce" data-finish="volt" data-mode="story">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#090b0d">
+  <meta name="description" content="PACE — After Hours. An original running-shoe concept in Volt, Ice and Infrared. Explore the form, fabric and construction in interactive 3D.">
+  <title>PACE — After Hours</title><link rel="icon" href="/favicon.svg">
+  <link rel="preload" href="/fonts/BarlowCondensed-Black.ttf" as="font" type="font/ttf" crossorigin>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to the campaign</a>
+  <header class="site-header">
+    <a class="brand" href="#hero" aria-label="PACE, back to the opening"><span>P</span><span>A</span><span>C</span><span>E</span><i>↗</i></a>
+    <p class="edition">Independent running concept<br><span>Campaign 01 / After Hours</span></p>
+    <a class="header-explore" href="#explore">Explore in 3D <span>↗</span></a>
+  </header>
+  <main id="main">
+    <section class="hero" id="hero" aria-labelledby="hero-heading">
+      <div class="hero-grid" aria-hidden="true"></div><div class="hero-orbit" aria-hidden="true"></div>
+      <div class="hero-top"><span>The city slows.<br>You don't have to.</span><span>PACE 01<br>Original footwear concept</span></div>
+      <h1 id="hero-heading"><span class="hero-line">AFTER</span><span class="hero-line hero-line--outline">HOURS<span class="hero-dot">.</span></span></h1>
+      <div class="product-frame hero-product" id="hero-view" role="img" aria-label="PACE 01 in Volt, an original graphite and acid running-shoe concept">
+        <img data-poster="hero" src="/renders/volt-hero.webp" width="1200" height="900" alt="PACE 01 in Volt, three-quarter view" fetchpriority="high">
+      </div>
+      <div class="hero-bottom"><div><span class="eyebrow">One silhouette. Three after-dark expressions.</span><p>Made for a different point of view.</p></div><a class="button button--accent" href="#story">Meet PACE 01 <span>↓</span></a></div>
+      <div class="intro-controls"><button id="skip-intro" type="button" hidden>Skip intro ↗</button><button id="replay-intro" type="button">Replay opening ↻</button><span id="intro-status" class="sr-only" aria-live="polite"></span></div>
+    </section>
 
-    <main id="main" tabindex="-1">
-      <section class="hero" id="hero" aria-labelledby="hero-heading">
-        <div class="hero-topline"><span>A different point of view.</span><span>PACE 01 / Concept footwear</span></div>
-        <h1 id="hero-heading" class="hero-title"><span class="headline-line"><span class="word">RUN YOUR</span></span><span class="headline-line headline-line--blue"><span class="word">OWN WAY.</span></span></h1>
-        <div class="hero-product" id="hero-view" role="img" aria-label="PACE 01 running-shoe concept: cobalt and icy-blue knit, a pearl heel, black structural panels and a small pink accent">
-          <img class="shoe-poster" src="/renders/hero.webp" alt="" width="1100" height="850" fetchpriority="high" />
-        </div>
-        <div class="hero-product-caption"><span class="caption-index">01</span><div><span>PACE / The first silhouette</span><strong>Cobalt. Ice. Pearl.</strong></div></div>
-        <div class="hero-bottom"><p>One original silhouette.<br />Every angle considered.</p><a class="explore-link" href="#details"><span>Inside PACE 01</span><span aria-hidden="true">↘</span></a></div>
-        <div class="hero-footnote"><span>Fictional footwear. An original design study.</span><span>Form / Construction / Weave <span aria-hidden="true">↓</span></span></div>
-      </section>
-
-      <section class="details" id="details" aria-labelledby="details-heading">
-        <div class="detail-sticky">
-          <div class="detail-heading"><h2 id="details-heading">A closer look at 01.</h2><span>One silhouette. Three perspectives.</span></div>
-          <div class="detail-composition">
-            <div class="detail-copy-region">
-              <article class="detail-copy is-active" data-step="0"><span class="chapter-number">01 / THE FORM</span><h3>DRAWN IN<br /><em>MOTION.</em></h3><p>A tapered forefoot, a lifted toe and a sculpted foam profile. Follow the line from pearl heel to cobalt upper.</p><span class="detail-note">The silhouette / Side view</span></article>
-              <article class="detail-copy" data-step="1" inert><span class="chapter-number">02 / THE CONSTRUCTION</span><h3>MADE OF<br /><em>CONTRAST.</em></h3><p>A fitted knit collar meets a dark, integrated instep. Sweeping panels wrap the foot, interrupted by one small pink accent.</p><span class="detail-note">The construction / Three-quarter view</span></article>
-              <article class="detail-copy" data-step="2" inert><span class="chapter-number">03 / THE WEAVE</span><h3>UP CLOSE.<br /><em>ALL DETAIL.</em></h3><p>Directional cobalt and icy-blue weave. Fine surface detail and restrained seams bring the upper into focus.</p><span class="detail-note">The material / Macro view</span></article>
-            </div>
-            <div class="viewer-column">
-              <div class="detail-product" id="detail-view" tabindex="0" role="group" aria-label="Interactive PACE shoe" aria-describedby="viewer-help">
-                <img class="shoe-poster" src="/renders/side.webp" alt="" width="1100" height="850" loading="lazy" />
-              </div>
-              <div class="viewer-tools"><p class="viewer-help" id="viewer-help">Drag to rotate. Arrow keys rotate. + and − zoom.</p><div class="orbit-controls" aria-label="Shoe controls"><button type="button" data-orbit="left" aria-label="Rotate shoe left">←</button><button type="button" data-orbit="right" aria-label="Rotate shoe right">→</button><button type="button" data-orbit="zoom-in" aria-label="Zoom in">+</button><button type="button" data-orbit="zoom-out" aria-label="Zoom out">−</button><button type="button" data-orbit="reset" aria-label="Reset shoe view">↺</button></div></div>
-            </div>
+    <section class="story" id="story" aria-labelledby="story-heading">
+      <div class="story-stage">
+        <div class="section-top"><h2 id="story-heading">Anatomy of the after hours.</h2><span>01—04 / Scroll to discover</span></div>
+        <div class="story-index" aria-hidden="true"><span id="chapter-number">01</span><span>/ 04</span></div>
+        <div class="story-composition">
+          <div class="story-copy-region">
+            <article class="story-copy is-active" data-chapter="0"><span class="eyebrow">01 / The silhouette</span><h3>TAKE<br>THE <em>LONG</em><br>WAY.</h3><p>A tapered forefoot. A lifted toe. One continuous line from fitted collar to sculpted foam.</p><span class="detail-caption">Original form / PACE 01</span></article>
+            <article class="story-copy" data-chapter="1"><span class="eyebrow">02 / The knit</span><h3>EVERY<br>THREAD.<br><em>IN FOCUS.</em></h3><p>Directional woven texture meets a close-fitting knit collar. Get close enough to follow the pattern.</p><span class="detail-caption">Woven upper / Integrated instep</span></article>
+            <article class="story-copy" data-chapter="2"><span class="eyebrow">03 / The heel</span><h3>A NEW<br><em>ANGLE</em><br>ON FORM.</h3><p>Sweeping textile panels wrap the heel. A narrow accent interrupts the line, then lets it continue.</p><span class="detail-caption">Fitted neck / Bonded support</span></article>
+            <article class="story-copy" data-chapter="3"><span class="eyebrow">04 / Underfoot</span><h3>FROM<br>THE <em>GROUND</em><br>UP.</h3><p>Sculpted foam, shallow rubber pods and open channels. Turn the silhouette over to see the construction.</p><span class="detail-caption">Sculpted midsole / Restrained tread</span></article>
           </div>
-          <div class="detail-bottom"><span class="detail-instruction">Scroll to change your perspective <span aria-hidden="true">↓</span></span><nav class="view-nav" aria-label="Product perspectives"><button type="button" data-view="0" class="is-active" aria-current="step"><span>01</span> Form</button><button type="button" data-view="1"><span>02</span> Construction</button><button type="button" data-view="2"><span>03</span> Weave</button></nav></div>
+          <div class="product-frame story-product" id="story-view" role="img" aria-label="PACE 01 product detail"><img data-poster="side" src="/renders/volt-side.webp" alt="PACE 01 side profile" width="1200" height="900" loading="lazy"></div>
         </div>
-        <div class="static-sequence" aria-label="Three perspectives of PACE 01">
-          <div class="static-heading"><h2>A closer look at 01.</h2><p>One silhouette. Three perspectives.</p></div><nav class="view-nav static-nav" aria-label="Product perspectives"><button type="button" data-view="0" class="is-active" aria-current="step"><span>01</span> Form</button><button type="button" data-view="1"><span>02</span> Construction</button><button type="button" data-view="2"><span>03</span> Weave</button></nav>
-          <article class="static-step"><div class="static-copy"><span class="chapter-number">01 / THE FORM</span><h3>DRAWN IN<br /><em>MOTION.</em></h3><p>A tapered forefoot, a lifted toe and a sculpted foam profile. Follow the line from pearl heel to cobalt upper.</p><span class="detail-note">The silhouette / Side view</span></div><img src="/renders/side.webp" alt="Side profile of the original PACE running shoe, with a tapered toe and sculpted foam midsole" width="1100" height="850" loading="lazy" /></article>
-          <article class="static-step"><div class="static-copy"><span class="chapter-number">02 / THE CONSTRUCTION</span><h3>MADE OF<br /><em>CONTRAST.</em></h3><p>A fitted knit collar meets a dark, integrated instep. Sweeping panels wrap the foot, interrupted by one small pink accent.</p><span class="detail-note">The construction / Three-quarter view</span></div><img src="/renders/threequarter.webp" alt="Three-quarter view revealing PACE's fitted collar, integrated instep and asymmetric panels" width="1100" height="850" loading="lazy" /></article>
-          <article class="static-step"><div class="static-copy"><span class="chapter-number">03 / THE WEAVE</span><h3>UP CLOSE.<br /><em>ALL DETAIL.</em></h3><p>Directional cobalt and icy-blue weave. Fine surface detail and restrained seams bring the upper into focus.</p><span class="detail-note">The material / Macro view</span></div><img src="/renders/macro.webp" alt="Material close-up of the cobalt and icy-blue directional knit on PACE 01" width="1100" height="850" loading="lazy" /></article>
-        </div>
-      </section>
-    </main>
-    <footer class="site-footer"><a class="brand footer-brand" href="#hero" aria-label="PACE, return to top">pace<span aria-hidden="true">↗</span></a><p>A fictional running brand.<br />An original design and motion study.</p><div id="motion-slot"></div><a class="back-top" href="#hero">Back to the start <span aria-hidden="true">↑</span></a></footer>
-    <script type="module" src="/src/main.ts"></script>
-  </body>
-</html>
+        <nav class="chapter-nav" aria-label="Product story chapters"><button data-chapter-go="0" aria-current="step"><span>01</span> Form</button><button data-chapter-go="1"><span>02</span> Knit</button><button data-chapter-go="2"><span>03</span> Heel</button><button data-chapter-go="3"><span>04</span> Sole</button></nav>
+        <div class="story-progress" aria-hidden="true"><span></span></div>
+      </div>
+    </section>
+    <section class="static-story" aria-label="PACE design details">
+      <article><div><span class="eyebrow">01 / The silhouette</span><h2>TAKE THE<br><em>LONG WAY.</em></h2><p>A tapered forefoot, a lifted toe and sculpted foam. Follow the complete silhouette.</p></div><img data-poster="side" src="/renders/volt-side.webp" alt="PACE 01 side profile" width="1200" height="900" loading="lazy"></article>
+      <article><div><span class="eyebrow">02 / The knit</span><h2>EVERY THREAD.<br><em>IN FOCUS.</em></h2><p>Directional woven texture, a fitted collar and an integrated instep.</p></div><img data-poster="knit" src="/renders/volt-knit.webp" alt="Close-up of PACE's woven upper and knit collar" width="1200" height="900" loading="lazy"></article>
+      <article><div><span class="eyebrow">03 / The heel</span><h2>A NEW ANGLE<br><em>ON FORM.</em></h2><p>Sweeping panels wrap the heel, finished with a narrow accent.</p></div><img data-poster="heel" src="/renders/volt-heel.webp" alt="Rear view of PACE's fitted collar and heel" width="1200" height="900" loading="lazy"></article>
+      <article><div><span class="eyebrow">04 / Underfoot</span><h2>FROM THE<br><em>GROUND UP.</em></h2><p>Shallow rubber pods and open foam channels follow the sculpted sole.</p></div><img data-poster="sole" src="/renders/volt-sole.webp" alt="PACE's sculpted midsole and restrained rubber tread" width="1200" height="900" loading="lazy"></article>
+    </section>
+
+    <section class="explore" id="explore" aria-labelledby="explore-heading">
+      <div class="section-top"><h2 id="explore-heading">Your turn.</h2><span>Explore the original geometry</span></div>
+      <div class="explore-heading"><h3>NO FIXED<br><em>POINT OF VIEW.</em></h3><p>Take control of the shoe.<br>Every angle belongs to you.</p></div>
+      <div class="explore-view-wrap">
+        <div class="product-frame explore-product" id="explore-view" tabindex="0" role="group" aria-label="Interactive PACE shoe" aria-describedby="explore-help"><img data-poster="hero" src="/renders/volt-hero.webp" alt="PACE 01 in three-quarter view" width="1200" height="900" loading="lazy"></div>
+        <div class="hotspots" id="hotspots" hidden><button data-hotspot="knit" aria-label="Knit detail"><span>01</span><i>Knit</i></button><button data-hotspot="heel" aria-label="Heel detail"><span>02</span><i>Heel</i></button><button data-hotspot="sole" aria-label="Sole detail"><span>03</span><i>Sole</i></button></div>
+        <div class="explore-start"><button class="button button--accent" id="enter-explore">Explore in 3D <span>↗</span></button><p id="viewer-status">One original shoe. Find a new perspective.</p></div>
+        <aside class="hotspot-note" id="hotspot-note" hidden aria-live="polite"><button id="close-hotspot" aria-label="Close detail">×</button><span class="eyebrow" id="hotspot-label"></span><p id="hotspot-description"></p></aside>
+      </div>
+      <div id="explore-controls" class="explore-controls" hidden>
+        <div class="preset-views" role="group" aria-label="Camera views"><button data-camera="side">Side</button><button data-camera="top">Top</button><button data-camera="sole">Sole</button><button data-camera="threequarter">Three-quarter</button></div>
+        <div class="orbit-controls" role="group" aria-label="Rotation and zoom"><button data-orbit="left" aria-label="Rotate shoe left">←</button><button data-orbit="right" aria-label="Rotate shoe right">→</button><button data-orbit="zoom-out" aria-label="Zoom out">−</button><button data-orbit="zoom-in" aria-label="Zoom in">+</button><button data-orbit="reset" aria-label="Reset shoe view">↺</button></div>
+        <button id="exit-explore" class="text-button">Back to the story ↗</button>
+      </div>
+      <p id="explore-help" class="explore-help">Drag to rotate · Arrow keys rotate · + / − zoom · Home resets.<span> On a phone, swipe sideways to rotate. Scroll vertically to continue.</span></p>
+    </section>
+
+    <section class="closing" id="closing" aria-labelledby="closing-heading">
+      <span class="eyebrow">Your pace. Your after hours.</span><h2 id="closing-heading">STAY<br><em>IN MOTION.</em></h2>
+      <div class="product-frame closing-product" id="closing-view" role="img" aria-label="PACE 01 final composition"><img data-poster="hero" src="/renders/volt-hero.webp" alt="Full view of PACE 01" width="1200" height="900" loading="lazy"></div>
+      <div class="closing-actions"><a href="#explore" class="button button--accent" id="explore-again">Explore again <span>↗</span></a><button id="change-finish" class="text-button">Find your finish ↓</button></div>
+      <p class="closing-credit">PACE 01 / <span data-finish-name>Volt</span><br>A fictional footwear concept. An original design study.</p>
+    </section>
+  </main>
+  <aside class="finish-dock" aria-label="Choose your colorway" id="finishes">
+    <div class="finish-title"><span>PACE 01</span><p>Choose your after hours.</p></div>
+    <div class="finish-options" role="radiogroup" aria-label="Shoe colorway"><button role="radio" aria-checked="true" tabindex="0" data-finish="volt"><i class="swatch swatch--volt"></i><span>Volt</span><b>Selected</b></button><button role="radio" aria-checked="false" tabindex="-1" data-finish="ice"><i class="swatch swatch--ice"></i><span>Ice</span><b>Select</b></button><button role="radio" aria-checked="false" tabindex="-1" data-finish="infrared"><i class="swatch swatch--infrared"></i><span>Infrared</span><b>Select</b></button></div>
+    <label class="motion-control"><span>Motion</span><select id="motion-select" aria-label="Motion preference"><option value="system">System</option><option value="reduce">Reduced</option><option value="full">Full</option></select></label>
+  </aside>
+  <div id="product-layer" aria-hidden="true"></div><span class="sr-only" id="live-status" aria-live="polite"></span>
+  <footer><span>PACE — AFTER HOURS</span><span>Concept only. No sales or performance claims.</span><a href="#hero">Back to top ↑</a></footer>
+  <script type="module" src="/src/main.ts"></script>
+</body></html>

@@ -41,23 +41,30 @@ function curve(points,closed=false){return new THREE.CatmullRomCurve3(points.map
 function strand(points,r=.007,segments=32){return new THREE.TubeGeometry(curve(points),segments,r,4,false);}
 function textureFrom(canvas,srgb=false,repeat=[1,1]){const t=new THREE.CanvasTexture(canvas);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(...repeat);t.anisotropy=4;if(srgb)t.colorSpace=THREE.SRGBColorSpace;return t;}
 function textile(){
-  const size=512,color=document.createElement('canvas'),mono=document.createElement('canvas'),normal=document.createElement('canvas');
-  for(const c of[color,mono,normal])c.width=c.height=size;
-  const cc=color.getContext('2d'),mc=mono.getContext('2d'),nc=normal.getContext('2d'),ci=cc.createImageData(size,size),mi=mc.createImageData(size,size),ni=nc.createImageData(size,size);
-  // Jacquard columns angle through the vamp. Fine paired V loops carry the micro-normal.
-  const ht=(x,y)=>{const row=Math.floor(y/8),phase=(x+(row%2)*3)%6,yy=(y%8)/8;return .48*Math.exp(-Math.pow((phase-3-1.4*Math.sin(yy*PI))/.9,2))+.14*Math.sin(x*2.2+y*1.1)+.065*Math.sin(x*4.7-y*3.9);};
+  const size=512,color=document.createElement('canvas'),mono=document.createElement('canvas'),normal=document.createElement('canvas'),rough=document.createElement('canvas');
+  for(const c of[color,mono,normal,rough])c.width=c.height=size;
+  const cc=color.getContext('2d'),mc=mono.getContext('2d'),nc=normal.getContext('2d'),rc=rough.getContext('2d');
+  const ci=cc.createImageData(size,size),mi=mc.createImageData(size,size),ni=nc.createImageData(size,size),ri=rc.createImageData(size,size);
+  const heights=new Float32Array(size*size);
+  // Paired yarn loops, offset courses and a slight diagonal warp; every component
+  // tiles at 512px. Cache the height field once instead of re-evaluating it for
+  // every neighbouring normal sample. Colour remains neutral for every finish.
   for(let y=0;y<size;y++)for(let x=0;x<size;x++){
-    const i=(y*size+x)*4,h=ht(x,y),grain=Math.sin(x*127.1+y*311.7)*43758.5453%1;
-    const rib=.5+.5*Math.sin((x+y*.32)*TAU/42),ribFine=.5+.5*Math.sin((x+y*.32)*TAU/10.5),v=.78+h*.28+grain*.06;
-    // Deep cobalt warp, ice-blue raised weft; restrained contrast stays textile-like at distance.
-    const mix=clamp(Math.pow(rib,3)*.075+ribFine*.08+h*.10,0,1);
-    ci.data.set([(30+mix*48)*v,(76+mix*71)*v,(182+mix*62)*v,255],i);
-    const m=210+h*48+grain*8;mi.data.set([m,m,m,255],i);
-    const dx=(ht(x+1,y)-ht(x-1,y))*.60,dy=(ht(x,y+1)-ht(x,y-1))*.60,inv=1/Math.sqrt(dx*dx+dy*dy+1);
-    ni.data.set([128-dx*inv*127,128-dy*inv*127,128+inv*127,255],i);
+    const row=Math.floor(y/8),sx=(x+y*.125+(row%2)*4)%8,sy=(y%8)/8;
+    const yarn=Math.exp(-Math.pow((Math.abs(sx-4)-(1.08+1.26*Math.sin(sy*PI)))/.80,2));
+    heights[y*size+x]=.62*yarn+.06*Math.sin((x+y)*PI/2)+.04*Math.sin(x*TAU/4+y*TAU/8);
   }
-  cc.putImageData(ci,0,0);mc.putImageData(mi,0,0);nc.putImageData(ni,0,0);
-  return{color:textureFrom(color,true,[3,1.8]),mono:textureFrom(mono,true,[3,1.8]),normal:textureFrom(normal,false,[3,1.8])};
+  const height=(x,y)=>heights[((y+size)%size)*size+(x+size)%size];
+  for(let y=0;y<size;y++)for(let x=0;x<size;x++){
+    const i=(y*size+x)*4,h=heights[y*size+x],fiber=Math.sin(x*TAU/4+y*TAU/8)*.5+Math.sin(x*TAU/16-y*TAU/8)*.5;
+    const directional=.5+.5*Math.sin((x+y*.125)*TAU/32),v=199+h*39+fiber*4+directional*5,m=224+h*24+fiber*3;
+    ci.data.set([v,v,v,255],i);mi.data.set([m,m,m,255],i);
+    const dx=(height(x+1,y)-height(x-1,y))*.8,dy=(height(x,y+1)-height(x,y-1))*.8,inv=1/Math.sqrt(dx*dx+dy*dy+1);
+    ni.data.set([128-dx*inv*127,128-dy*inv*127,128+inv*127,255],i);
+    const r=235-h*32+fiber*5;ri.data.set([r,r,r,255],i);
+  }
+  cc.putImageData(ci,0,0);mc.putImageData(mi,0,0);nc.putImageData(ni,0,0);rc.putImageData(ri,0,0);
+  return{color:textureFrom(color,true,[3,1.8]),mono:textureFrom(mono,true,[3,1.8]),normal:textureFrom(normal,false,[3,1.8]),roughness:textureFrom(rough,false,[3,1.8])};
 }
 function foamTexture(){
   const c=document.createElement('canvas');c.width=c.height=128;const cx=c.getContext('2d'),im=cx.createImageData(128,128);
@@ -135,7 +142,9 @@ function rubberPatch(x0,x1,side){
 function throat(){
   const p=[],uv=[],idx=[],normals=[],nx=28,nz=10;
   for(let i=0;i<=nx;i++)for(let j=0;j<=nz;j++){
-    const u=i/nx,v=j/nz,x=lerp(-.92,.45,u),width=.32*Math.pow(Math.sin(u*PI),.24)+.010,t=PI/2+(v*2-1)*width,point=skin(x,t,.009);
+    // The fitted collar base ends at x=-.72. Begin just ahead of it so the
+    // throat cannot cut through the lowered neck shell or its knit wall.
+    const u=i/nx,v=j/nz,x=lerp(-.70,.45,u),width=.18*Math.pow(1-u,3)+.27*Math.pow(Math.sin(u*PI),.30)+.008,t=PI/2+(v*2-1)*width,point=skin(x,t,.007);
     p.push(...point.toArray());uv.push((x+2.14)/4.29,t/PI);normals.push(...normalAt(x,t).toArray());
   }
   for(let i=0;i<nx;i++)for(let j=0;j<nz;j++){const a=i*(nz+1)+j,b=a+nz+1;idx.push(a,b,a+1,a+1,b,b+1);}return geom(p,uv,idx,normals);
@@ -150,18 +159,18 @@ function edgeFinish(points,side,offset,width){
   return geom(p,uv,idx,normals);
 }
 function logo(){
-  const c=document.createElement('canvas');c.width=512;c.height=128;const cx=c.getContext('2d');cx.fillStyle='#15212e';cx.font='italic 900 82px Arial, sans-serif';cx.textAlign='center';cx.textBaseline='middle';cx.fillText('PACE',252,61);const map=textureFrom(c,true);
+  const c=document.createElement('canvas');c.width=512;c.height=128;const cx=c.getContext('2d');cx.fillStyle='#ffffff';cx.font='italic 900 82px Arial, sans-serif';cx.textAlign='center';cx.textBaseline='middle';cx.fillText('PACE',252,61);const map=textureFrom(c,true);
   const p=[],uv=[],idx=[],nx=12,ny=3;for(let i=0;i<=nx;i++)for(let j=0;j<=ny;j++){const pt=skin(lerp(-1.94,-1.40,i/nx),lerp(.37,.62,j/ny),.033);p.push(...pt.toArray());uv.push(i/nx,j/ny);}for(let i=0;i<nx;i++)for(let j=0;j<ny;j++){const a=i*(ny+1)+j,b=a+ny+1;idx.push(a,b,a+1,a+1,b,b+1);}return{map,geometry:geom(p,uv,idx)};
 }
 export function createPaceShoe(){
   const group=new THREE.Group();group.name='PACE Drift 01 — directional knit running shoe';
   const knit=textile(),grain=foamTexture(),mark=logo();
   const materials={
-    upper:new THREE.MeshStandardMaterial({map:knit.color,normalMap:knit.normal,normalScale:new THREE.Vector2(.32,.32),roughness:.89,metalness:0,color:'#ffffff',side:THREE.DoubleSide}),
-    pearl:new THREE.MeshStandardMaterial({map:knit.mono,normalMap:knit.normal,normalScale:new THREE.Vector2(.23,.23),color:'#eceef1',roughness:.84,side:THREE.DoubleSide}),
-    ice:new THREE.MeshStandardMaterial({map:knit.mono,normalMap:knit.normal,normalScale:new THREE.Vector2(.27,.27),color:'#8dbed9',roughness:.91,side:THREE.DoubleSide}),
-    foam:new THREE.MeshStandardMaterial({map:grain,color:'#e1e7e7',roughness:.69,metalness:0}),
-    structure:new THREE.MeshStandardMaterial({map:knit.mono,normalMap:knit.normal,normalScale:new THREE.Vector2(.12,.12),color:'#101b28',roughness:.56,side:THREE.DoubleSide}),
+    upper:new THREE.MeshStandardMaterial({map:knit.color,normalMap:knit.normal,normalScale:new THREE.Vector2(.42,.42),roughnessMap:knit.roughness,roughness:.98,metalness:0,color:'#ffffff',side:THREE.DoubleSide}),
+    pearl:new THREE.MeshStandardMaterial({map:knit.mono,normalMap:knit.normal,normalScale:new THREE.Vector2(.25,.25),roughnessMap:knit.roughness,color:'#eceef1',roughness:.96,side:THREE.DoubleSide}),
+    ice:new THREE.MeshStandardMaterial({map:knit.mono,normalMap:knit.normal,normalScale:new THREE.Vector2(.32,.32),roughnessMap:knit.roughness,color:'#8dbed9',roughness:.98,side:THREE.DoubleSide}),
+    foam:new THREE.MeshStandardMaterial({map:grain,color:'#e1e7e7',roughness:.81,metalness:0}),
+    structure:new THREE.MeshStandardMaterial({map:knit.mono,normalMap:knit.normal,normalScale:new THREE.Vector2(.075,.075),color:'#101b28',roughness:.60,side:THREE.DoubleSide}),
     accent:new THREE.MeshStandardMaterial({color:'#ff2e92',roughness:.44}),
     branding:new THREE.MeshStandardMaterial({map:mark.map,transparent:true,forceSinglePass:true,roughness:.78,depthWrite:false,side:THREE.DoubleSide,polygonOffset:true,polygonOffsetFactor:-2}),
   };
@@ -188,13 +197,37 @@ export function createPaceShoe(){
   // Understated flat cable rungs only peek through the covered throat.
   for(let i=0;i<3;i++){const x=-.31+i*.20,pts=[];for(let j=0;j<=8;j++){const z=lerp(-.17,.17,j/8),t=Math.acos(z/shape(x,1)),p=skin(x,t,.012);pts.push(p.toArray());}buckets.structure.push(strand(pts,.0045,10));}
   // One small original pink tab, with no sports-brand symbol or copied panel art.
-  const pinkTab=new THREE.BoxGeometry(.12,.033,.11,1,1,1);pinkTab.rotateZ(-.11);pinkTab.translate(-1.90,.85,.313);buckets.accent.push(pinkTab);
+  // Small bonded heel marker follows the actual curved textile instead of a floating box.
+  buckets.accent.push(patch(outline([[-1.99,.61],[-1.96,.67],[-1.84,.68],[-1.82,.63],[-1.85,.59],[-1.96,.57]],8),1,.006,2));
   buckets.accent.push(patch(outline([[-.92,.20],[-.77,.23],[-.65,.27],[-.65,.30],[-.79,.28],[-.94,.25]],12),1,.050,2));
   buckets.branding.push(mark.geometry);
-  for(const[k,list]of Object.entries(buckets)){if(!list.length)continue;const mesh=new THREE.Mesh(merge(list),materials[k]);mesh.name=k==='upper'?'Directional cobalt jacquard':k==='pearl'?'Pearl heel and fitted knit collar':k==='foam'?'Sculpted foam rocker':k==='ice'?'Asymmetric icy-blue textile panels':k==='structure'?'Bonded support, concealed fastening, restrained rubber':k;mesh.castShadow=true;mesh.receiveShadow=true;group.add(mesh);}
-  const palettes={chalk:{upper:'#ffffff',pearl:'#f3f2ef',ice:'#9dc4df',foam:'#e7e9e3',structure:'#142133',accent:'#ff2e92'},cobalt:{upper:'#ffffff',pearl:'#f3f2ef',ice:'#9dc4df',foam:'#e7e9e3',structure:'#142133',accent:'#ff2e92'},acid:{upper:'#eff8ff',pearl:'#eeeeee',ice:'#b0d4dd',foam:'#e7e9e3',structure:'#142133',accent:'#d9ed42'}};
-  function setColorway(name='cobalt'){for(const[k,v]of Object.entries(palettes[name]||palettes.cobalt))materials[k].color.set(v);group.userData.colorway=name in palettes?name:'cobalt';}
-  setColorway('cobalt');
+  for(const[k,list]of Object.entries(buckets)){if(!list.length)continue;const mesh=new THREE.Mesh(merge(list),materials[k]);mesh.name=k==='upper'?'Neutral directional knit — palette-tinted':k==='pearl'?'Contrasting heel and fitted knit collar':k==='foam'?'Sculpted foam rocker':k==='ice'?'Asymmetric bonded textile panels':k==='structure'?'Bonded support, concealed fastening, restrained rubber':k;mesh.castShadow=true;mesh.receiveShadow=true;group.add(mesh);}
+  const palettes={
+    volt:{upper:'#424847',pearl:'#313a38',ice:'#d8ef47',foam:'#dddeda',structure:'#141b1b',accent:'#d6ff39',branding:'#f0f6de'},
+    ice:{upper:'#396ee0',pearl:'#edf0ed',ice:'#9fcfea',foam:'#e8eae3',structure:'#17242e',accent:'#ff518f',branding:'#172532'},
+    infrared:{upper:'#383c42',pearl:'#292f34',ice:'#e26657',foam:'#e2ded6',structure:'#171d22',accent:'#ff785e',branding:'#fff0dc'},
+  };
+  const aliases={chalk:'ice',cobalt:'ice',acid:'volt'};
+  const materialKeys=Object.keys(palettes.volt);
+  // THREE.Color converts authored sRGB hex values once. Snapshots and blending
+  // operate in linear RGB, so interrupted transitions never quantize through hex.
+  const paletteColors=Object.fromEntries(Object.entries(palettes).map(([name,palette])=>[name,Object.fromEntries(Object.entries(palette).map(([key,value])=>[key,new THREE.Color(value)]))]));
+  const resolveColorway=name=>Object.hasOwn(palettes,name)?name:(Object.hasOwn(aliases,name)?aliases[name]:'volt');
+  const snapshotOf=colors=>Object.fromEntries(materialKeys.map(key=>[key,colors[key].toArray()]));
+  function getPaletteSnapshot(){return Object.fromEntries(materialKeys.map(key=>[key,materials[key].color.toArray()]));}
+  function getColorway(name='volt'){return snapshotOf(paletteColors[resolveColorway(name)]);}
+  function applyPalette(snapshot){
+    for(const key of materialKeys){const value=snapshot?.[key];if(Array.isArray(value)&&value.length===3&&value.every(Number.isFinite))materials[key].color.setRGB(value[0],value[1],value[2]);}
+  }
+  function setColorway(name='volt'){
+    const resolved=resolveColorway(name);for(const key of materialKeys)materials[key].color.copy(paletteColors[resolved][key]);group.userData.colorway=resolved;
+  }
+  function blendColorway(fromSnapshot,toName,t){
+    const resolved=resolveColorway(toName),target=paletteColors[resolved],amount=clamp(Number.isFinite(t)?t:0,0,1);
+    for(const key of materialKeys){const from=fromSnapshot?.[key],to=target[key];if(Array.isArray(from)&&from.length===3&&from.every(Number.isFinite))materials[key].color.setRGB(lerp(from[0],to.r,amount),lerp(from[1],to.g,amount),lerp(from[2],to.b,amount));}
+    group.userData.colorway=resolved;
+  }
+  setColorway('volt');
   const geometries=new Set(),allMaterials=new Set(),textures=new Set();let triangles=0,drawCalls=0;group.traverse(o=>{if(o.isMesh){geometries.add(o.geometry);triangles+=(o.geometry.index?.count||o.geometry.attributes.position.count)/3;drawCalls++;allMaterials.add(o.material);for(const v of Object.values(o.material))if(v?.isTexture)textures.add(v);}});
-  return{group,materials,setColorway,info:{name:'PACE Drift 01',geometry:'One original tapered procedural last, all views share this final geometry.',colorways:Object.keys(palettes),triangles,drawCalls,textureCount:textures.size,textureDimensions:[...textures].map(t=>[t.image.width,t.image.height]),bounds:new THREE.Box3().setFromObject(group),cameraHint:{position:[3,2.2,8],target:[0,.62,0]},macroHint:{position:[.6,2.5,4],target:[-.60,.85,.18]},provenance:'Original procedural geometry, deterministic directional knit colour/normal maps, original panel shapes, PACE wordmark typeset in system Arial.'},dispose(){for(const g of geometries)g.dispose();for(const m of allMaterials)m.dispose();for(const t of textures)t.dispose();}};
+  return{group,materials,setColorway,getPaletteSnapshot,getColorway,applyPalette,blendColorway,info:{name:'PACE Drift 01',geometry:'One original tapered procedural last, all views share this final geometry.',colorways:Object.keys(palettes),triangles,drawCalls,textureCount:textures.size,textureDimensions:[...textures].map(t=>[t.image.width,t.image.height]),bounds:new THREE.Box3().setFromObject(group),cameraHint:{position:[3,2.2,8],target:[0,.62,0]},macroHint:{position:[.6,2.5,4],target:[-.60,.85,.18]},provenance:'Original procedural geometry, deterministic neutral directional knit colour/normal/roughness maps, original panel shapes, PACE wordmark typeset in system Arial.'},dispose(){for(const g of geometries)g.dispose();for(const m of allMaterials)m.dispose();for(const t of textures)t.dispose();}};
 }

@@ -12,10 +12,8 @@ const productionPublicFiles = [
   'fonts/manrope-regular.ttf',
   'fonts/manrope-bold.ttf',
   'fonts/Manrope-OFL.txt',
-  'renders/hero.webp',
-  'renders/side.webp',
-  'renders/threequarter.webp',
-  'renders/macro.webp',
+  ...['volt', 'ice', 'infrared'].flatMap(finish =>
+    ['hero', 'side', 'knit', 'heel', 'sole'].map(pose => `renders/${finish}-${pose}.webp`)),
 ];
 const publicRoot = fileURLToPath(new URL('./public/', import.meta.url));
 

@@ -1,16 +1,21 @@
 import {createShoeStage} from './scene';
-import type {PoseName} from './scene';
+import type {PoseName, ColorwayName} from './scene';
 
 const params=new URLSearchParams(location.search);
 if(params.has('capture'))document.body.classList.add('capture');
 const status=document.querySelector<HTMLElement>('#status')!;
 const host=document.querySelector<HTMLElement>('#studio-view')!;
 const select=document.querySelector<HTMLSelectElement>('#pose')!;
+const finish=document.querySelector<HTMLSelectElement>('#finish')!;
 const record=document.querySelector<HTMLButtonElement>('#record')!;
 const download=document.querySelector<HTMLAnchorElement>('#download')!;
 const header=document.querySelector('header')!;
-const validPoses:PoseName[]=['hero','side','threequarter','macro'];
-const choice=params.get('pose') as PoseName|null;
+const validPoses:PoseName[]=['hero','side','knit','heel','sole','threequarter','top'];
+const validFinishes:ColorwayName[]=['volt','ice','infrared'];
+const finishChoice=params.get('finish') as ColorwayName|null;
+if(finishChoice&&validFinishes.includes(finishChoice))finish.value=finishChoice;
+const rawChoice=params.get('pose');
+const choice=(rawChoice==='macro'?'knit':rawChoice) as PoseName|null;
 if(choice&&validPoses.includes(choice))select.value=choice;
 const stage=createShoeStage(host,()=>{status.textContent='WebGL unavailable. Asset exports cannot continue.';});
 let busy=false,resizePending=false,resizeFrame=0,recordingFrame=0;
@@ -22,7 +27,8 @@ const liveCaptureSupported='MediaRecorder' in window&&Boolean(HTMLCanvasElement.
 record.disabled=!liveCaptureSupported;
 
 function apply(){
-  stage.setPose(select.value as PoseName);document.body.dataset.pose=select.value;
+  stage.setColorway(finish.value as ColorwayName);
+  stage.setPose(select.value as PoseName);document.body.dataset.pose=select.value;document.body.dataset.finish=finish.value;
   stage.renderNow();
 }
 function refreshSize(){
@@ -34,23 +40,31 @@ const observer=new ResizeObserver(()=>{if(!resizeFrame)resizeFrame=requestAnimat
 window.addEventListener('resize',()=>{if(!resizeFrame)resizeFrame=requestAnimationFrame(refreshSize);},{passive:true});
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&!busy)refreshSize();});
 function lock(value:boolean){
-  busy=value;record.disabled=value||!liveCaptureSupported;select.disabled=value;exportButton.disabled=value;sequenceButton.disabled=value;
+  busy=value;record.disabled=value||!liveCaptureSupported;select.disabled=value;finish.disabled=value;exportButton.disabled=value;sequenceButton.disabled=value;
   if(!value&&resizePending){resizePending=false;refreshSize();}
 }
 function restore(){
   stage.renderer.setClearColor(0x000000,0);
   stage.resize();apply();lock(false);
 }
-select.addEventListener('change',()=>{exportLink.hidden=true;apply();status.textContent='One original mesh. '+select.options[select.selectedIndex].text+' view.';});
+function selectionChanged(){exportLink.hidden=true;apply();status.textContent=finish.options[finish.selectedIndex].text+' / '+select.options[select.selectedIndex].text+'. Shared geometry; colors applied immediately.';}
+select.addEventListener('change',selectionChanged);finish.addEventListener('change',selectionChanged);
 apply();
-status.textContent='One original mesh. Side, three-quarter and macro views share the exact final geometry.';
+status.textContent='Three finishes × five standard views share one original mesh. Poster exports are transparent 1200 × 900 PNGs named finish-view.png. Optional views are excluded from the production poster set.';
 const statsTimer=setInterval(()=>document.querySelector('#stats')!.textContent=JSON.stringify(stage.stats(),null,2),800);
 
 exportButton.addEventListener('click',()=>{
   if(busy)return;
-  stage.resize();stage.renderer.setPixelRatio(1);stage.setPose(select.value as PoseName);
-  exportLink.href=stage.snapshot('image/png');exportLink.download='pace-'+select.value+'.png';exportLink.hidden=false;
-  status.textContent='Transparent '+select.value+' poster ready: '+stage.renderer.domElement.width+' × '+stage.renderer.domElement.height+'. Rendered from the final geometry.';
+  const previousStyle=host.style.cssText;
+  try{
+    // Export framing is fixed independently of the responsive authoring viewport.
+    host.style.width='1200px';host.style.height='900px';host.style.maxWidth='none';
+    stage.resize();stage.renderer.setPixelRatio(1);apply();
+    const name=finish.value+'-'+select.value;
+    exportLink.href=stage.snapshot('image/png');exportLink.download=name+'.png';exportLink.hidden=false;
+    status.textContent='Transparent '+name+'.png ready: '+stage.renderer.domElement.width+' × '+stage.renderer.domElement.height+'. Actual final geometry and selected palette; save into docs/after-hours/render-source/.';
+  }catch(error){status.textContent='Poster export failed: '+String(error);exportLink.hidden=true;}
+  finally{host.style.cssText=previousStyle;stage.resize();apply();}
 });
 
 if(!liveCaptureSupported)status.textContent+=' Live canvas recording is unavailable in this browser.';
@@ -69,7 +83,7 @@ record.addEventListener('click',()=>{
   recorder.onstop=()=>{
     cancelAnimationFrame(recordingFrame);
     const blob=new Blob(chunks,{type:mime});
-    download.href=URL.createObjectURL(blob);download.download='pace-live-model-canvas.webm';download.hidden=false;
+    download.href=URL.createObjectURL(blob);download.download='pace-'+finish.value+'-live-model-canvas.webm';download.hidden=false;
     stream.getTracks().forEach(track=>track.stop());restore();
     status.textContent='Live canvas capture: '+frameCount+' rendering updates / '+(blob.size/1024/1024).toFixed(2)+' MB. Not a full-page recording or sustained-scroll benchmark.';
   };
@@ -101,7 +115,7 @@ sequenceButton.addEventListener('click',async()=>{
     await output.finalize();
     const blob=new Blob([output.target.buffer!],{type:'video/webm'});
     const dataUrl=await new Promise<string>((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(String(reader.result));reader.onerror=()=>reject(reader.error);reader.readAsDataURL(blob);});
-    download.href=dataUrl;download.download='pace-offline-model-sequence.webm';download.hidden=false;
+    download.href=dataUrl;download.download='pace-'+finish.value+'-offline-model-sequence.webm';download.hidden=false;
     status.textContent='Offline export: 8 seconds / 240 frames / '+(blob.size/1024/1024).toFixed(2)+' MB. Not a live page recording or evidence of browser performance.';
   }catch(error){status.textContent='Offline video export unavailable: '+String(error);}
   finally{restore();}

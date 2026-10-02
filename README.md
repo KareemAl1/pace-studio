@@ -1,98 +1,70 @@
-# PACE — original running-shoe visual study
+# PACE — After Hours
 
-PACE is a fictional running brand built to demonstrate frontend composition, original product rendering and responsive interaction. This local milestone contains a hero and one product-detail scroll sequence. It does not include shopping, sizes, a bag, payments or backend services.
+An original fictional running-brand campaign built to demonstrate frontend art direction, responsive composition and interactive 3D. One shoe moves from an oversized typographic opening through its form, knit, heel and sole, then into manual inspection.
 
-The redesigned PACE 01 uses a tapered running silhouette, fitted knit collar, integrated instep, directional cobalt/ice fabric, pearl heel, black support panels and a small pink accent. Every view comes from the same original geometry.
+**Local visual milestone. Publishing is paused.** This milestone contains three finishes and product exploration. Shopping, size selection, a bag, checkout and backend services are outside the implemented scope.
+
+![After Hours in Volt — actual desktop browser screenshot](docs/after-hours/screenshots/desktop-volt.jpg)
+
+## Experience
+
+- A brief, skippable opening with immediately visible content and replay control.
+- Native scrolling through four product chapters, with reversible camera movement and chapter navigation.
+- Explicit Explore mode with drag, keyboard rotation/zoom, camera presets and material hotspots.
+- Volt, Ice and Infrared finishes using the same geometry, with interruptible material and lighting transitions.
+- A complete image story for reduced motion and WebGL failure, with deliberate mobile compositions.
+
+The product, geometry, panel shapes and generated material maps are original. The campaign makes no footwear performance claims and contains no invented testimonials. Reference research and the distinction between observed visuals and publisher descriptions are recorded in the [reference audit](docs/after-hours/REFERENCES.md).
 
 ## Run locally
 
-Requirements: Node.js 22.12+ and npm. Dependencies are project-local.
+Use Node.js 22.12+ and npm from this project directory:
 
 ```powershell
 npm ci
 npm run dev
 ```
 
-The configured local address is `http://127.0.0.1:4180/`. Vite uses a strict port and does not silently select another port. To inspect a production build:
+Open **[http://127.0.0.1:4180/](http://127.0.0.1:4180/)**. Both development and preview bind only to loopback and use a strict port. Stop an existing PACE process on that port before starting the other mode; Vite will not silently move the preview elsewhere.
 
 ```powershell
 npm run build
 npm run preview
 ```
 
-These commands bind to loopback. Nothing has been deployed or published.
-
-Useful routes on the current page:
-
-| Route | Purpose |
+| Local review URL | Purpose |
 | --- | --- |
-| `/?motion=full` | Full-motion visual review |
-| `/?motion=reduce` | Complete reduced-motion composition |
-| `/?view=static` | Force the static asset fallback |
-| `/?motion=full&profile=1` | Explicit live-browser timing sample |
-| `/?motion=full&inspect=1` | WebGL context-loss test control |
+| [Normal campaign](http://127.0.0.1:4180/) | Respects the operating system's motion preference |
+| [Full motion](http://127.0.0.1:4180/?motion=full) | Review opening and scroll choreography |
+| [Reduced motion](http://127.0.0.1:4180/?motion=reduce) | Complete image composition; optional explicit Explore |
+| [Static fallback](http://127.0.0.1:4180/?view=static) | Force the page without interactive 3D |
+| [Ice finish](http://127.0.0.1:4180/?finish=ice) | Open a specific finish |
+| [Live profiler](http://127.0.0.1:4180/?motion=full&profile=1) | Start and stop an explicit browser sample |
+| [Context-loss control](http://127.0.0.1:4180/?motion=full&inspect=1) | Exercise WebGL failure locally |
 
-The normal root URL respects the operating system's motion preference. Studio and baseline tools are available with `npm run dev`. For their separate built review output, run `npm run build:review`, then `npm run preview -- --outDir dist-review` after stopping the current preview. Production `dist/` includes only the current page, its four posters, used fonts and third-party notices; historical diagnostics are excluded.
+## Architecture and assets
 
-## What to review
+The campaign uses **TypeScript, Vite and Three.js**, with local Barlow Condensed and Manrope fonts. One demand-driven page scheduler owns story progress and Explore input. The renderer has no independent animation loop, and the page keeps native scrolling. GSAP is retained for the historical baseline; Mediabunny supports the optional studio export tool.
 
-- Expressive typography, a product-led opening and a compact three-perspective detail composition.
-- Native scrolling mapped directly to a deterministic camera path.
-- Mouse drag, keyboard rotation/zoom/reset and labelled viewer controls.
-- Mobile resolution limits, no idle render loop, hidden/offscreen suspension.
-- A complete static page for reduced motion, short viewports and WebGL failure.
+All finishes and views share one procedural shoe. Fine textile detail uses texture/normal maps; finish changes retain the mesh and textures. Reduced-motion and fallback posters are exported from that same asset and camera set.
 
-![Redesigned desktop opening](docs/refinement/after-desktop.jpg)
-![Redesigned phone opening](docs/refinement/after-phone.jpg)
-![Actual final-asset macro view in the page](docs/refinement/after-macro-desktop.jpg)
+Read the [After Hours engineering notes](docs/after-hours/ENGINEERING.md) for the five motion moments, camera ownership, interruption handling, quality limits and interview explanation.
 
-[Desktop and phone before/after gallery](docs/refinement/compare.html). Screenshots are review artifacts, not performance evidence. The final page was inspected in the in-app browser at 1280 × 800, 390 × 844 and a short 320 × 620 viewport. The short viewport uses the complete static composition. None of these layouts had horizontal overflow. Measurements and their limits are documented below.
+## Review and verification
 
-## Implementation
+See the [current verification report](docs/after-hours/VERIFY.md) for the completed checks, raw evidence and limitations. Warm production samples in the in-app browser recorded:
 
-The main page uses Vite, TypeScript and Three.js. There is no React state or React scroll update. GSAP remains in the isolated old baseline, not the current page controller. Mediabunny is used only by the developer-facing asset studio's optional offline video export.
-
-One demand-driven animation-frame callback consumes the latest native scroll position, updates the camera and renders. There is no scroll-smoothing replacement, scrub catch-up tween or second renderer loop. A fixed canvas and interpolated viewport keep the asset continuous between hero and detail.
-
-The procedural shoe uses shared geometry and directional texture/normal maps. It is rendered in real time and exported to fallback posters from the same cameras. Font license files remain in `public/fonts`.
-
-See [engineering notes](docs/refinement/ENGINEERING.md) for architecture, accessibility, asset construction, performance methodology and remaining limits.
-
-## Measured results and limits
-
-Actual local samples used the Codex in-app browser at 1280×800, DPR 1, with native wheel events driven through UI automation.
-
-| Observation | Original baseline | Refined version |
+| Observation | Desktop, 1440 × 900 / DPR 1 | Phone viewport, 390 × 844 |
 | --- | ---: | ---: |
-| Draw calls in captured view | 22 | 8 |
-| Drawn triangles in captured view | 56,870 | 12,838 |
-| Warm render CPU median | 0.3 ms | 0.2 ms |
-| Warm render CPU p95 | 0.6 ms | 0.7 ms |
-| Constructor setup | 200.5 ms | 202.1 ms |
-| Render submissions sampled | 25 | 10 |
+| Sample duration | 45,147.4 ms | 41,321.6 ms |
+| Actual render submissions | 1,016 | 633 |
+| Render CPU p95 | 0.2 ms | 0.2 ms |
+| Accepted input → CPU submission p95 | 3.9 ms | 3.1 ms |
+| Observed long tasks | 0 | 0 |
 
-The refined sample recorded 10 scroll events and 20 wheel events over 51.45 seconds. Its rAF gaps varied from a 4.2 ms median to a 1,004.2 ms maximum. A repeated original-baseline sample again had approximately one-second median scheduling gaps.
+These are CPU submission measurements, not displayed FPS, GPU completion or input-to-pixel timing. A cold development sample included a 122 ms setup long task; the warm results do not include that cost. Physical phones and standalone Chrome were unavailable for testing. Historical refinement measurements are retained separately and are not current campaign results.
 
-This is evidence of variable browser/environment scheduling interacting with the tested source. It is not a controlled FPS comparison or proof of GPU saturation. CPU submission time is not GPU completion time. Setup did not improve in these samples, and the refined first render still cost 72.7 ms. No 60 fps, foreground-Chrome, physical-phone or Lighthouse result is claimed.
-
-Raw evidence:
-
-- [Original baseline](docs/refinement/baseline-iab.json)
-- [Repeated baseline](docs/refinement/baseline-repeat-iab.json)
-- [Refined runtime](docs/refinement/after-iab.json)
-
-Completed in-app-browser checks:
-
-- Mouse dragging, keyboard rotation and zoom, Home reset, and alternating control-button input.
-- Rapid perspective selection in the order 2 → 3 → 1 settled on perspective 1.
-- Repeated Reduced → Full changes retained exactly one canvas.
-- Actual WebGL context loss displayed all three static product images successfully.
-- Browser Back and Forward restored the root and `#details` positions at scroll offsets 0 and 684, with one canvas.
-- The phone-sized layout had 44 × 44 CSS-pixel orbit controls. The final console check reported no errors.
-
-Hidden-tab behavior and physical touch gestures were reviewed in source but were not verified live. Chrome automation and full-page live recording were unavailable. These viewport checks are not physical-phone tests.
-
-## Asset editing and verification
+[Watch the short live WebGL recording](docs/after-hours/live-canvas.webm), also playable in the gallery. A 12-second wall-clock capture window yielded 2.01 seconds of encoded playback in this browser. The clip captures the actual page canvas only; HTML, background and controls are excluded. It is not a full-page recording, FPS benchmark or proof of presentation timing. The cause of the duration difference was not established.
 
 ```powershell
 npm run check
@@ -100,24 +72,31 @@ npm run build
 node tools/check-geometry.mjs
 ```
 
-The geometry check verifies finite attributes and shared geometry references across internal material palettes; it does not validate visual realism.
+The geometry check validates stable geometry and texture references, finite attributes, palette distinction and interrupted color transitions. It does not prove visual realism or browser performance.
 
-To regenerate posters, use the studio's Hero, Side, Three-quarter and Macro views. Export transparent PNGs into `docs/refinement/render-source/` as `hero.png`, `side.png`, `threequarter.png` and `macro.png`. Then run:
+- [After Hours desktop and phone review gallery](docs/after-hours/review.html)
+- [Current browser results and performance evidence](docs/after-hours/VERIFY.md)
+- [Short live WebGL recording — 2-second encoded clip, canvas only](docs/after-hours/live-canvas.webm)
+- [Current engineering and verification boundary](docs/after-hours/ENGINEERING.md)
+- [Reference inspection notes](docs/after-hours/REFERENCES.md)
+- [Historical before/after gallery — previous design](docs/refinement/compare.html)
+- [Historical raw browser sample — previous design](docs/refinement/after-iab.json)
+
+Open the gallery locally at [http://127.0.0.1:4181/docs/after-hours/review.html](http://127.0.0.1:4181/docs/after-hours/review.html) when the separate review development server is running. Reopen that server with `npm run dev -- --port 4181`; the campaign preview can stay on 4180. Source documentation and the gallery are excluded from production output.
+
+The local `/studio.html` and `/baseline.html` are available during `npm run dev`. To build their separate review output:
 
 ```powershell
-python tools/optimize-posters.py
+npm run build:review
+npm run preview -- --outDir dist-review
 ```
 
-That optional asset tool requires Pillow and encodes the PNG renders as WebP in `public/renders/`. The PNG intermediate avoids alpha-edge artifacts observed with Chromium's direct WebP encoding. All four delivered posters were regenerated from the frozen final asset after the insole adjustment.
+Stop the current preview first because both commands use port 4180. The production build excludes the studio, baseline and historical review files; it includes the current campaign, 15 finish/view posters, required fonts and notices.
 
-Live canvas capture and offline camera exports are labelled separately in the studio. A rendered video is never used as proof that the live page scrolls smoothly.
+To regenerate those posters, export the five standard views for all three finishes from the studio into `docs/after-hours/render-source/`, then run `python tools/optimize-posters.py` with Pillow installed. See the engineering notes for exact filenames and validation. Studio canvas capture and offline video export are labeled separately; neither substitutes for a live page-scroll test.
 
-## Scope and preservation
+## Local status and licenses
 
-The recoverable original milestone is preserved locally, outside Git, at `checkpoints/2026-10-01-before-shoe-redesign/`. This refinement remains entirely inside PACE. The later publication review is limited to Handheld Studio, Sona and PACE.
+Nothing in this pass is pushed or deployed. Existing `vercel.json` describes the Vite output but is not evidence of a live deployment. Future GitHub work is reserved for **KareemAl1** after review.
 
-The product is fictional, with no testimonials, footwear performance claims, real checkout or publication. The older `README.txt` describes the first milestone; this README and the refinement engineering notes describe the current redesign.
-
-## Publication preparation
-
-The repository is prepared for KareemAl1. Publishing is pending review. vercel.json declares a Vite build with output in dist; no account is linked and no live domain is assigned. The root third-party notice URL includes the exact Three.js MIT and font OFL texts. The build also generates notices for bundled dependencies. No project-wide open-source license has been selected.
+Font license files are in `public/fonts/`; [third-party notices](public/THIRD_PARTY_NOTICES.txt) preserve the library and font licenses. The build also emits notices for bundled dependencies. No project-wide open-source license has been selected. Historical checkpoints and evidence remain preserved.
