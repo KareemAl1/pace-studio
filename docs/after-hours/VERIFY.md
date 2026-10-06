@@ -1,15 +1,15 @@
 # After Hours — local verification
 
-Recorded October 1, 2026. Publishing remains paused. These results describe the After Hours campaign, not the earlier light design.
+Recorded October 1, 2026, before public deployment. These are historical local results for the After Hours campaign, not fresh measurements of the public site or results for the earlier light design. See the [publication report](../publication.md) for the October 6 release checks.
 
 ## Review
 
 - Production preview: http://127.0.0.1:4180/
 - Before/after gallery: http://127.0.0.1:4181/docs/after-hours/review.html
-- Source: `C:\Users\karee_4m899us\Documents\Projects\pace-studio`
+- Source: repository root (`pace-studio`).
 - Recoverable starting point: Git tag `checkpoint-before-after-hours-2026-10-01` at `2b80f3a2d3f4ec44ea27a8514b3869b8b9785754`, plus the source archive and previous build under `checkpoints/2026-10-01-before-after-hours/`.
 
-Only PACE was changed. No pushes, deployments, public profile edits, purchases or third-party service integrations occurred. Git attribution remains `KareemAl1 <kareemalwan47@gmail.com>`.
+During the October 1 verification pass, only PACE was changed and no pushes, deployments, public profile edits, purchases or third-party service integrations occurred. Git attribution uses `KareemAl1`.
 
 ## Browser and method
 

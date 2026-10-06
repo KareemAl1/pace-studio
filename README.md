@@ -2,9 +2,11 @@
 
 An original fictional running-brand campaign built to demonstrate frontend art direction, responsive composition and interactive 3D. One shoe moves from an oversized typographic opening through its form, knit, heel and sole, then into manual inspection.
 
-**Local visual milestone. Publishing is paused.** This milestone contains three finishes and product exploration. Shopping, size selection, a bag, checkout and backend services are outside the implemented scope.
+**Live:** [pace-studio-zeta.vercel.app](https://pace-studio-zeta.vercel.app/) · **Source:** [KareemAl1/pace-studio](https://github.com/KareemAl1/pace-studio)
 
-![After Hours in Volt — actual desktop browser screenshot](docs/after-hours/screenshots/desktop-volt.jpg)
+Published on Vercel with the public GitHub repository connected on `main`. The campaign includes three finishes and product exploration. Shopping, size selection, a bag, checkout and backend services are outside the implemented scope.
+
+![After Hours in Volt — desktop browser screenshot recorded October 1, 2026](docs/after-hours/screenshots/desktop-volt.jpg)
 
 ## Experience
 
@@ -18,7 +20,7 @@ The product, geometry, panel shapes and generated material maps are original. Th
 
 ## Run locally
 
-Use Node.js 22.12+ and npm from this project directory:
+Use Node.js 22.12+ on the Node 22 line, or Node.js 24, with npm. Publication verification used Node 22.12.0 locally; Vercel uses Node 24. From this project directory:
 
 ```powershell
 npm ci
@@ -52,7 +54,9 @@ Read the [After Hours engineering notes](docs/after-hours/ENGINEERING.md) for th
 
 ## Review and verification
 
-See the [current verification report](docs/after-hours/VERIFY.md) for the completed checks, raw evidence and limitations. Warm production samples in the in-app browser recorded:
+The [publication report](docs/publication.md) records the October 6, 2026 production build, geometry validation and deployment checks. The [October 1 local verification report](docs/after-hours/VERIFY.md) preserves the earlier browser checks, raw evidence and limitations.
+
+The following warm production-preview samples were recorded **locally on October 1, 2026**, in the in-app browser. They are not fresh measurements of the public Vercel deployment:
 
 | Observation | Desktop, 1440 × 900 / DPR 1 | Phone viewport, 390 × 844 |
 | --- | ---: | ---: |
@@ -75,7 +79,8 @@ node tools/check-geometry.mjs
 The geometry check validates stable geometry and texture references, finite attributes, palette distinction and interrupted color transitions. It does not prove visual realism or browser performance.
 
 - [After Hours desktop and phone review gallery](docs/after-hours/review.html)
-- [Current browser results and performance evidence](docs/after-hours/VERIFY.md)
+- [October 6 publication and deployment checks](docs/publication.md)
+- [October 1 local browser results and performance evidence](docs/after-hours/VERIFY.md)
 - [Short live WebGL recording — 2-second encoded clip, canvas only](docs/after-hours/live-canvas.webm)
 - [Current engineering and verification boundary](docs/after-hours/ENGINEERING.md)
 - [Reference inspection notes](docs/after-hours/REFERENCES.md)
@@ -95,8 +100,16 @@ Stop the current preview first because both commands use port 4180. The producti
 
 To regenerate those posters, export the five standard views for all three finishes from the studio into `docs/after-hours/render-source/`, then run `python tools/optimize-posters.py` with Pillow installed. See the engineering notes for exact filenames and validation. Studio canvas capture and offline video export are labeled separately; neither substitutes for a live page-scroll test.
 
-## Local status and licenses
+## Screenshots
 
-Nothing in this pass is pushed or deployed. Existing `vercel.json` describes the Vite output but is not evidence of a live deployment. Future GitHub work is reserved for **KareemAl1** after review.
+These browser captures were recorded during the October 1 local review; they show the same After Hours design and are not newly captured deployment evidence.
+
+| Ice — desktop | Explore — desktop | Static fallback — phone viewport |
+| --- | --- | --- |
+| ![Ice finish on desktop](docs/after-hours/screenshots/desktop-ice.jpg) | ![Interactive product exploration](docs/after-hours/screenshots/desktop-explore.jpg) | ![Static fallback in a phone-sized viewport](docs/after-hours/screenshots/fallback-phone.jpg) |
+
+## Publication and licenses
+
+The live campaign is hosted by the Vercel project `pace-studio`, connected to [KareemAl1/pace-studio](https://github.com/KareemAl1/pace-studio) with `main` as its production branch. Vercel installs with `npm ci`, builds with `npm run build` and serves `dist`, as configured in `vercel.json`. See the [publication report](docs/publication.md) for the validation record.
 
 Font license files are in `public/fonts/`; [third-party notices](public/THIRD_PARTY_NOTICES.txt) preserve the library and font licenses. The build also emits notices for bundled dependencies. No project-wide open-source license has been selected. Historical checkpoints and evidence remain preserved.
