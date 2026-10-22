@@ -62,7 +62,7 @@ exportButton.addEventListener('click',()=>{
     stage.resize();stage.renderer.setPixelRatio(1);apply();
     const name=finish.value+'-'+select.value;
     exportLink.href=stage.snapshot('image/png');exportLink.download=name+'.png';exportLink.hidden=false;
-    status.textContent='Transparent '+name+'.png ready: '+stage.renderer.domElement.width+' × '+stage.renderer.domElement.height+'. Actual final geometry and selected palette; save into docs/after-hours/render-source/.';
+    status.textContent='Transparent '+name+'.png ready: '+stage.renderer.domElement.width+' × '+stage.renderer.domElement.height+'. Actual final geometry and selected palette; save into assets/render-source/.';
   }catch(error){status.textContent='Poster export failed: '+String(error);exportLink.hidden=true;}
   finally{host.style.cssText=previousStyle;stage.resize();apply();}
 });

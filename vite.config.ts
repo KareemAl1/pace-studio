@@ -47,7 +47,7 @@ export default defineConfig(({ mode }) => {
       license: { fileName: 'third-party-notices.md' },
       rollupOptions: {
         input: review
-          ? { main: 'index.html', studio: 'studio.html', baseline: 'baseline.html' }
+          ? { main: 'index.html', studio: 'studio.html' }
           : { main: 'index.html' },
         output: {
           manualChunks(id: string) {

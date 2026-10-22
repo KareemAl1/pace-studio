@@ -10,7 +10,7 @@ root = Path(__file__).resolve().parents[1]
 finishes = ('volt', 'ice', 'infrared')
 poses = ('hero', 'side', 'knit', 'heel', 'sole')
 names = [f'{finish}-{pose}' for finish in finishes for pose in poses]
-source_dir = root / 'docs' / 'after-hours' / 'render-source'
+source_dir = root / 'assets' / 'render-source'
 destination_dir = root / 'public' / 'renders'
 missing = [f'{name}.png' for name in names if not (source_dir / f'{name}.png').is_file()]
 if missing:

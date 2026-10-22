@@ -8,10 +8,9 @@
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview --host 127.0.0.1 --port 4180 --strictPort",
     "check": "tsc --noEmit",
-    "build:review": "tsc --noEmit && vite build --mode review"
+    "build:studio": "tsc --noEmit && vite build --mode review"
   },
   "dependencies": {
-    "gsap": "^3.15.0",
     "three": "^0.186.1"
   },
   "devDependencies": {

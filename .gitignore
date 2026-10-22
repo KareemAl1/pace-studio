@@ -3,16 +3,8 @@ dist/
 .npm-cache/
 .preview/
 *.log
-checkpoints/
-.review-package/
 .vercel/
 .env
 .env.*
 !.env.example
-/README.txt
-/public/review/
-docs/refinement/*-first-review.jpg
-docs/refinement/*-second-review.jpg
-docs/refinement/*-layout-review.jpg
-docs/refinement/macro-third-review.webp
 dist-review/
