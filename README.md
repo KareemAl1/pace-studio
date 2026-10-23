@@ -45,5 +45,3 @@ node tools/check-geometry.mjs  # validates the generated shoe
 To rebuild the poster images, export the views from `studio.html` into `assets/render-source/`, then run `python tools/optimize-posters.py`.
 
 The shoe, brand and copy are original. Font licenses are in `public/fonts/`, and third-party notices are in `public/THIRD_PARTY_NOTICES.txt`.
-
-Made by [Kareem Alwan](https://kareemalwan.vercel.app).
