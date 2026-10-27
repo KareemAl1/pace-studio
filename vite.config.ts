@@ -6,6 +6,7 @@ import { defineConfig, type Plugin } from 'vite';
 // Keep historical review artifacts available locally without deploying them.
 const productionPublicFiles = [
   'favicon.svg',
+  'og.jpg',
   'THIRD_PARTY_NOTICES.txt',
   'fonts/BarlowCondensed-Black.ttf',
   'fonts/BarlowCondensed-OFL.txt',
