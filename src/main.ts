@@ -41,9 +41,25 @@ try{introEligible=sessionStorage.getItem('pace-after-hours-intro')!=='seen';}cat
 if(scrollY>20||location.hash&&location.hash!=='#hero')introEligible=false;
 
 function queue(){if(!document.hidden&&!raf)raf=requestAnimationFrame(draw);}
+// The chapter number rolls like a race clock: the old digits leave in the
+// direction you scroll and the new ones arrive from the other side.
+let numberRoll:Animation|undefined;
+function rollChapterNumber(text:string,forward:boolean){
+  const el=$('#chapter-number');
+  numberRoll?.cancel();
+  el.textContent=text;
+  if(isReduced()||currentChapter<0)return;
+  const from=forward?'60%':'-60%';
+  numberRoll=el.animate([
+    {transform:`translateY(${from})`,opacity:0,filter:'blur(6px)'},
+    {transform:'none',opacity:1,filter:'blur(0)'},
+  ],{duration:520,easing:'cubic-bezier(.16,1,.3,1)'});
+}
 function chapter(index:number){
   if(index===currentChapter)return;
-  currentChapter=index;$('#chapter-number').textContent=String(index+1).padStart(2,'0');
+  const forward=index>currentChapter;
+  rollChapterNumber(String(index+1).padStart(2,'0'),forward);
+  currentChapter=index;
   copies.forEach((copy,i)=>{copy.classList.toggle('is-active',i===index);copy.inert=i!==index;});
   chapterButtons.forEach((button,i)=>i===index?button.setAttribute('aria-current','step'):button.removeAttribute('aria-current'));
   story.dataset.chapter=String(index+1);
