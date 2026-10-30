@@ -34,3 +34,10 @@ html[data-motion=reduce] *,html[data-motion=reduce] *:before,html[data-motion=re
 @media(max-width:700px) and (max-height:740px){.story-stage{min-height:0}.story-copy h3{font-size:48px;margin:12px 0}.story-copy[data-chapter="3"] h3{font-size:43px}.story-copy p{font-size:12px;max-width:240px}.story-copy{padding-top:18px}.story-index{top:78px}.story-product{top:45%;bottom:2%}.chapter-nav{bottom:calc(var(--dock) + 8px)}}
 .story-stage{z-index:5}
 @media(max-width:700px) and (max-height:740px){.story-product{top:58%}.story-copy p{font-size:12px;line-height:1.5}.story-copy h3{font-size:44px}}
+/* Picking a finish: the swatch pops, then keeps a soft glow ring in its own color. */
+.finish-options button .swatch{transition:transform .35s cubic-bezier(.16,1,.3,1),box-shadow .45s cubic-bezier(.16,1,.3,1)}
+.finish-options button:hover .swatch{transform:rotate(-35deg) scale(1.12)}
+.finish-options button[aria-checked=true] .swatch{box-shadow:0 0 0 3px #0b0e10,0 0 0 4px var(--swatch-glow,#d7ff31),0 0 18px var(--swatch-glow,#d7ff31);animation:swatch-pop .5s cubic-bezier(.16,1,.3,1)}
+.swatch--volt{--swatch-glow:#d7ff3199}.swatch--ice{--swatch-glow:#94d2ff99}.swatch--infrared{--swatch-glow:#ff6f6099}
+@keyframes swatch-pop{0%{transform:rotate(-35deg) scale(.7)}60%{transform:rotate(-35deg) scale(1.18)}100%{transform:rotate(-35deg) scale(1)}}
+@media(prefers-reduced-motion:reduce){.finish-options button[aria-checked=true] .swatch{animation:none}.finish-options button:hover .swatch{transform:rotate(-35deg)}}
