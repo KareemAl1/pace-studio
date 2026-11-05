@@ -49,3 +49,16 @@ html[data-motion=reduce] *,html[data-motion=reduce] *:before,html[data-motion=re
 .chapter-nav button[aria-current]::before{transform:scaleX(1)}
 .chapter-nav button:hover:not([aria-current]){color:#d9e0dc}
 @media(prefers-reduced-motion:reduce){.chapter-nav button::before{transition:none}}
+
+/* Chapter follow-through: the headline lands first, then the eyebrow, body
+   and caption come into focus one after another. */
+html[data-motion=full] .story-copy.is-active>.eyebrow,html[data-motion=full] .story-copy.is-active>p,html[data-motion=full] .story-copy.is-active>.detail-caption{animation:chapter-follow 560ms cubic-bezier(.16,1,.3,1) both}
+html[data-motion=full] .story-copy.is-active>.eyebrow{animation-delay:40ms}
+html[data-motion=full] .story-copy.is-active>p{animation-delay:150ms}
+html[data-motion=full] .story-copy.is-active>.detail-caption{animation-delay:240ms}
+@keyframes chapter-follow{from{opacity:0;transform:translateY(10px);filter:blur(6px)}to{opacity:1;transform:none;filter:none}}
+
+/* Accent buttons lean toward the pointer a little, then settle back. */
+.button--accent{transition:transform 420ms cubic-bezier(.16,1,.3,1)}
+.button--accent.is-magnet{transition-duration:120ms}
+.button--accent>span{display:inline-block;transition:transform 420ms cubic-bezier(.16,1,.3,1)}
