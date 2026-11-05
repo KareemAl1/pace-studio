@@ -282,3 +282,26 @@ if(params.has('inspect')){const button=document.createElement('button');button.i
 window.addEventListener('pagehide',event=>{if(!event.persisted){cancelAnimationFrame(raf);stage?.dispose();}},{once:true});
 installCanvasRecorder(() => stage?.renderer.domElement);
 applyAccent();updateFinishUI();chapter(0);if(fallbackOnly)fail();else void configure();
+
+// Accent buttons pull gently toward a fine pointer. Off for touch and for
+// reduced motion, and the text glyph moves a touch further than the button.
+const magnetic = matchMedia('(hover: hover) and (pointer: fine)');
+document.querySelectorAll<HTMLElement>('.button--accent').forEach((button) => {
+  const glyph = button.querySelector<HTMLElement>(':scope > span');
+  const reset = () => {
+    button.classList.remove('is-magnet');
+    button.style.transform = '';
+    if (glyph) glyph.style.transform = '';
+  };
+  button.addEventListener('pointermove', (event) => {
+    if (!magnetic.matches || root.dataset.motion !== 'full') return reset();
+    const r = button.getBoundingClientRect();
+    const dx = (event.clientX - (r.left + r.width / 2)) / r.width;
+    const dy = (event.clientY - (r.top + r.height / 2)) / r.height;
+    button.classList.add('is-magnet');
+    button.style.transform = `translate(${dx * 10}px, ${dy * 8}px)`;
+    if (glyph) glyph.style.transform = `translate(${dx * 6}px, ${dy * 5}px)`;
+  });
+  button.addEventListener('pointerleave', reset);
+  button.addEventListener('blur', reset);
+});
