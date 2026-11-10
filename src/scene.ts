@@ -149,6 +149,8 @@ export function createShoeStage(host: HTMLElement, onFailure: () => void, option
   let viewTransition: PoseTransition | undefined, storyReturn: StoryReturn | undefined;
   let colorTransition: ColorTransition | undefined, currentColorway = 'volt';
   let yaw = 0, pitch = 0, userZoom = 1;
+  // A small extra turn toward the pointer, added on top of whatever pose is showing.
+  let leanYaw = 0, leanPitch = 0;
   let draws = 0, totalCpu = 0, maxCpu = 0, firstCpu = 0;
 
   const onLost = (event: Event) => {event.preventDefault(); if (!disposed) onFailure();};
@@ -333,7 +335,8 @@ export function createShoeStage(host: HTMLElement, onFailure: () => void, option
     camera.top = halfHeight; camera.bottom = -halfHeight;
     camera.position.set(...currentPose.eye); cameraTarget.set(...currentPose.target);
     camera.lookAt(cameraTarget); camera.zoom = currentPose.zoom; camera.updateProjectionMatrix();
-    shoe.group.rotation.set(...currentPose.rotation);
+    const [rx, ry, rz] = currentPose.rotation;
+    shoe.group.rotation.set(rx + leanPitch, ry + leanYaw, rz);
     renderer.setScissorTest(false); renderer.clear();
     renderer.setViewport(frame.x, viewHeight - frame.y - frame.height, frame.width, frame.height);
     const left = Math.max(0, frame.x), bottom = Math.max(0, viewHeight - frame.y - frame.height);
@@ -410,6 +413,7 @@ export function createShoeStage(host: HTMLElement, onFailure: () => void, option
   return {
     renderer, shoe, resize, setFrame, setStory, setIntro, setExplore, setExploreView, setOrbit,
     transitionColorway, updateMaterials, update, settleTransitions, projectPoint, setPose, setEntry,
+    setLean: (nextYaw: number, nextPitch: number) => {leanYaw = nextYaw; leanPitch = nextPitch;},
     setProgress: setStory, opening: setIntro, renderNow: draw, invalidate: draw, stats,
     setColorway: (name: ColorwayName | string) => transitionColorway(name, performance.now(), 0),
     snapshot: (mime = 'image/webp') => {draw(); return renderer.domElement.toDataURL(mime, .94);},

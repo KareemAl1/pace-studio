@@ -87,6 +87,16 @@ function updateAccent(now:number){
   applyAccent();if(t===1)accentTransition=undefined;return t<1;
 }
 function applyAccent(){const rgb=accent.map(Math.round);root.style.setProperty('--accent',`rgb(${rgb.join(',')})`);root.style.setProperty('--accent-rgb',rgb.join(','));}
+// The shoe turns a few degrees toward a fine pointer, eased so it trails the hand.
+const lean={yaw:0,pitch:0,toYaw:0,toPitch:0};
+function updateLean(){
+  const active=!exploring&&root.dataset.motion==='full';
+  const toYaw=active?lean.toYaw:0,toPitch=active?lean.toPitch:0;
+  lean.yaw+=(toYaw-lean.yaw)*.07;lean.pitch+=(toPitch-lean.pitch)*.07;
+  const moving=Math.abs(toYaw-lean.yaw)>.0004||Math.abs(toPitch-lean.pitch)>.0004;
+  if(!moving){lean.yaw=toYaw;lean.pitch=toPitch;}
+  return moving;
+}
 function draw(now:number){
   raf=0;if(document.hidden)return;
   const accentMoving=updateAccent(now);
@@ -96,13 +106,14 @@ function draw(now:number){
   let frame=current.frame;
   if(frameReturn){const t=clamp((now-frameReturn.started)/Math.max(1,duration()));frame=mixFrame(frameReturn.from,frame,ease(t));if(t===1)frameReturn=undefined;}
   stage.setFrame(frame);stage.setStory(current.progress);stage.setOrbit(yaw,pitch,zoom);
+  const leaning=updateLean();stage.setLean(lean.yaw,lean.pitch);
   if(introPlaying){
     const t=clamp((now-introStarted)/2000);stage.setIntro(t);
     if(t===1)finishIntro();
   }else stage.setIntro(1);
   const moving=stage.update(now);
   if(current.visible&&stage.renderNow(now)){root.dataset.render='webgl';lastFrame=frame;positionHotspots();}
-  if(current.visible&&(moving||introPlaying||frameReturn)||accentMoving)queue();
+  if(current.visible&&(moving||leaning||introPlaying||frameReturn)||accentMoving)queue();
 }
 function positionHotspots(){
   if(!exploring||!stage)return;
@@ -305,3 +316,13 @@ document.querySelectorAll<HTMLElement>('.button--accent').forEach((button) => {
   button.addEventListener('pointerleave', reset);
   button.addEventListener('blur', reset);
 });
+
+if(matchMedia('(hover: hover) and (pointer: fine)').matches){
+  window.addEventListener('pointermove',event=>{
+    if(event.pointerType!=='mouse')return;
+    lean.toYaw=(event.clientX/window.innerWidth-.5)*.34;
+    lean.toPitch=(event.clientY/window.innerHeight-.5)*.12;
+    queue();
+  },{passive:true});
+  document.documentElement.addEventListener('pointerleave',()=>{lean.toYaw=0;lean.toPitch=0;queue();});
+}
