@@ -319,7 +319,8 @@ document.querySelectorAll<HTMLElement>('.button--accent').forEach((button) => {
 
 if(matchMedia('(hover: hover) and (pointer: fine)').matches){
   window.addEventListener('pointermove',event=>{
-    if(event.pointerType!=='mouse')return;
+    // People who ask for less motion get a shoe that stays put.
+    if(event.pointerType!=='mouse'||reduced.matches)return;
     lean.toYaw=(event.clientX/window.innerWidth-.5)*.34;
     lean.toPitch=(event.clientY/window.innerHeight-.5)*.12;
     queue();
